@@ -60,10 +60,42 @@ void CMFCTestView::OnDraw(CDC* pDC)
 		return;
 
 	// TODO: 在此处为本机数据添加绘制代码
+	//CRect干嘛的？
 	CRect rect;
 	GetClientRect(&rect);
+
+	//pDC指针指向TextOutW方法输出文字
 	pDC->TextOutW(200, 200, _T("Hello World!"));
 
+	//油漆桶画笔工具填充一个矩形
+	CBrush brush;
+	brush.CreateSolidBrush(RGB(0, 0, 255));
+	CBrush *oldBrush = pDC->SelectObject(&brush);
+	pDC->Rectangle(1, 1, 200, 200);
+	pDC->SelectObject(&oldBrush);
+
+	//输出文字
+	pDC->TextOutW(50, 50, _T("你猜我是Helloworld!"));
+
+	//输出文字你说啥并进行变换
+	CFont font;
+	font.CreateFont(40, 20, 0, 0, FW_NORMAL, FALSE, FALSE, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, _T("Microsoft YaHei"));
+	CFont *oldFont = pDC->SelectObject(&font);
+	pDC->TextOutW(300, 300, _T("你说啥？"));
+	pDC->SelectObject(oldFont);
+	pDC->TextOutW(500, 500, _T("你说啥？"));//貌似没执行？
+
+
+	//画笔工具
+	CPen pen;
+	pen.CreatePen(PS_DASH, 10, RGB(6, 6, 173));
+	CPen *oldPen = pDC->SelectObject(&pen);
+	pDC->MoveTo(100, 200);
+	pDC->LineTo(700, 900);
+	pDC->SelectObject(&oldPen);
+
+
+	//插入图片
 	CBitmap bmp;
 	bmp.LoadBitmapW(IDB_ME);
 	CImageList imgList;
