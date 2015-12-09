@@ -60,11 +60,11 @@ void CMFCTestView::OnDraw(CDC* pDC)
 		return;
 
 	// TODO: 在此处为本机数据添加绘制代码
-	//CRect干嘛的？
+	//【Ongoing】CRect干嘛的？
 	CRect rect;
 	GetClientRect(&rect);
 
-	//pDC指针指向TextOutW方法输出文字
+	//pDC指针指向TextOutW方法输出文字，本文字由于下面代码涂层在上覆盖，无法显示。
 	pDC->TextOutW(200, 200, _T("Hello World!"));
 
 	//油漆桶画笔工具填充一个矩形
@@ -75,15 +75,15 @@ void CMFCTestView::OnDraw(CDC* pDC)
 	pDC->SelectObject(&oldBrush);
 
 	//输出文字
-	pDC->TextOutW(50, 50, _T("你猜我是Helloworld!"));
+	pDC->TextOutW(50, 50, _T("你瞅啥？"));
 
 	//输出文字你说啥并进行变换
 	CFont font;
-	font.CreateFont(40, 20, 0, 0, FW_NORMAL, FALSE, FALSE, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, _T("Microsoft YaHei"));
+	font.CreateFont(40, 20, 0, 0, FW_NORMAL, FALSE, FALSE, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, _T("楷体"));
 	CFont *oldFont = pDC->SelectObject(&font);
-	pDC->TextOutW(300, 300, _T("你说啥？"));
-	pDC->SelectObject(oldFont);
-	pDC->TextOutW(500, 500, _T("你说啥？"));//貌似没执行？
+	pDC->TextOutW(300, 300, _T("瞅你咋地？"));
+	pDC->SelectObject(&oldFont);
+	pDC->TextOutW(400, 400, _T("再瞅一个试试？"));//【OK】貌似没执行？已解决，出现了，只不过500 500的时候超出画布
 
 
 	//画笔工具
