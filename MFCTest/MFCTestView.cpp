@@ -203,6 +203,13 @@ void CMFCTestView::OnTimer(UINT_PTR nIDEvent)
 	imgList.Add(&bmp, RGB(0, 0, 0));
 	imgList.Draw(pDC, 0, CPoint(200 + posLeftRight, 200 + posUpDown), ILD_TRANSPARENT);
 
+	short key = GetKeyState(VK_RIGHT);
+	if (key & 0x80 != 0)
+	{
+		posLeftRight += 5;
+		key = 0;
+	}
+
 	ReleaseDC(pDC);//释放不需要的内存
 
 	CView::OnTimer(nIDEvent);
