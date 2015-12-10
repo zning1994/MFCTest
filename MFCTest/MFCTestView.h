@@ -11,6 +11,12 @@ protected: // 仅从序列化创建
 	CMFCTestView();
 	DECLARE_DYNCREATE(CMFCTestView)
 
+	//属性
+public:
+	int t;
+	int posUpDown;
+	int posLeftRight;
+
 // 特性
 public:
 	CMFCTestDoc* GetDocument() const;
@@ -43,6 +49,10 @@ protected:
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 };
 
 #ifndef _DEBUG  // MFCTestView.cpp 中的调试版本

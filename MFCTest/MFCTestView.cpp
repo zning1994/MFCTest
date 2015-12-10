@@ -28,6 +28,9 @@ BEGIN_MESSAGE_MAP(CMFCTestView, CView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CMFCTestView::OnFilePrintPreview)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
+	ON_WM_TIMER()
+	ON_WM_CREATE()
+	ON_WM_KEYDOWN()
 END_MESSAGE_MAP()
 
 // CMFCTestView 构造/析构
@@ -61,6 +64,7 @@ void CMFCTestView::OnDraw(CDC* pDC)
 
 	// TODO: 在此处为本机数据添加绘制代码
 	//【Ongoing】CRect干嘛的？
+	//绘制战机不能放在OnDraw中
 	CRect rect;
 	GetClientRect(&rect);
 
@@ -94,8 +98,7 @@ void CMFCTestView::OnDraw(CDC* pDC)
 	pDC->LineTo(700, 900);
 	pDC->SelectObject(&oldPen);
 
-
-	//插入图片
+	//绘制战机
 	CBitmap bmp;
 	bmp.LoadBitmapW(IDB_ME);
 	CImageList imgList;
@@ -106,6 +109,8 @@ void CMFCTestView::OnDraw(CDC* pDC)
 
 
 // CMFCTestView 打印
+
+
 
 
 void CMFCTestView::OnFilePrintPreview()
@@ -167,3 +172,68 @@ CMFCTestDoc* CMFCTestView::GetDocument() const // 非调试版本是内联的
 
 
 // CMFCTestView 消息处理程序
+
+
+void CMFCTestView::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+
+	if (nIDEvent == 1)
+	{
+		t++;
+	}
+
+	CDC *pDC = GetDC();//如不使用却不释放，则熬成内存溢出
+
+
+	//每次执行，刷新窗口区，从而实现前景物体飞但并不会留下“影痕”
+	CRect rect;
+	GetClientRect(&rect);
+	pDC->Rectangle(&rect);
+
+	CString s;
+	s.Format(_T("%d"), t);
+	pDC->TextOutW(350, 450, s);
+
+	//插入战机图片
+	CBitmap bmp;
+	bmp.LoadBitmapW(IDB_ME);
+	CImageList imgList;
+	imgList.Create(50, 60, ILC_COLOR8 | ILC_MASK, 1, 0);
+	imgList.Add(&bmp, RGB(0, 0, 0));
+	imgList.Draw(pDC, 0, CPoint(200 + posLeftRight, 200 + posUpDown), ILD_TRANSPARENT);
+
+	ReleaseDC(pDC);//释放不需要的内存
+
+	CView::OnTimer(nIDEvent);
+}
+
+
+int CMFCTestView::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CView::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	// TODO:  在此添加您专用的创建代码
+
+	SetTimer(1, 100, 0);
+	t = 0;
+	posUpDown = 0;
+	posLeftRight = 0;
+	return 0;
+}
+
+
+void CMFCTestView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	if (nChar==VK_DOWN)
+		posUpDown += 10;
+	if (nChar == VK_UP)
+		posUpDown -= 10;
+	if (nChar == VK_LEFT)
+		posLeftRight -= 10;
+	if (nChar == VK_RIGHT)
+		posLeftRight += 10;
+	CView::OnKeyDown(nChar, nRepCnt, nFlags);
+}
